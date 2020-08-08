@@ -1,0 +1,143 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Font Awesome -->
+     <link rel="stylesheet" href="{% static 'css/all.css' %}">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <!-- Custom -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- LightBox -->
+    <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %}">
+
+
+    <style>{% block css %} {% endblock css %}</style>
+    <title>BT Real Estate</title>
+  </head>
+  <body>
+
+
+  <!--Topbar-->
+{% include 'partials/_topbar.html' %}
+
+<!--Navbar-->
+{% include 'partials/_navbar.html' %}
+
+
+    {% block content %}
+    {% endblock content %}
+
+  </body>
+
+
+<!--Footer-->
+{% include 'partials/_footer.html' %}
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %} "></script>
+    <script src="{% static 'js/main.js' %} "></script>
+    <script src="{% static 'js/lightbox.min.js' %} "></script>
+    <script src="{% static 'js/country.js' %} "></script>
+    <script>
+    setTimeout(function() {
+    $('#message').fadeOut('slow');
+}, 2000);
+    </script>
+
+<!--   Geodata Country sate city-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//geodata.solutions/includes/countrystatecity.js"></script>
+
+    <script>
+        $("#id_country").change(function () {
+        var url = $("#personForm").attr("data-states-url");
+        var countryId = $(this).val();
+
+
+        $.ajax({
+        url: url,
+        data: {
+        'country': countryId
+        },
+        success: function (data) {
+        $("#id_state").html(data);
+        }
+        });
+
+        });
+
+        $("#id_state").change(function () {
+        var url = $("#personForm").attr("data-cities-url");
+        var stateId = $(this).val();
+
+
+        $.ajax({
+        url: url,
+        data: {
+        'state': stateId
+        },
+        success: function (data) {
+        $("#id_city").html(data);
+        }
+        });
+
+        });
+     </script>
+
+
+
+   <script> {% block js %} {% endblock js %}</script>
+
+    <script>
+
+        $("#countryId").change(function () {
+        var url = $("#personFORM").attr("data-states-url");
+        var countryId = $(this).val();
+
+
+        $.ajax({
+        url: url,
+        data: {
+        'country': countryId
+        },
+        success: function (data) {
+        $("#stateId").html(data);
+        }
+        });
+
+        });
+
+        $("#stateId").change(function () {
+        var url = $("#personFORM").attr("data-cities-url");
+        var stateId = $(this).val();
+
+
+        $.ajax({
+        url: url,
+        data: {
+        'state': stateId
+        },
+        success: function (data) {
+        $("#cityId").html(data);
+        }
+        });
+
+        });
+
+    </script>
+
+
+
+
+
+    {% block script%} {% endblock script %}
+
+</html>

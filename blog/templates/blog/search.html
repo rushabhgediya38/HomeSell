@@ -1,0 +1,173 @@
+{% extends 'blog/base.html' %}
+{% load humanize %}
+{% block content %}
+
+<section id="showcase">
+    <div class="container text-center">
+      <div class="home-search p-5">
+        <div class="overlay p-5">
+          <h1 class="display-4 mb-4">
+            Property Searching Just Got So Easy
+          </h1>
+          <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Recusandae quas, asperiores eveniet vel nostrum magnam
+            voluptatum tempore! Consectetur, id commodi!</p>
+          <div class="search">
+            <form method="get" action="{% url 'search' %}" id="personFORM" data-states-url="{% url 'ajax_load_states' %}" data-cities-url="{% url 'ajax_load_cities' %}" enctype="multipart/form-data">
+              <!-- Form Row 1 -->
+              <div class="form-row">
+                 <div class="col-md-4 mb-3">
+                  <label class="sr-only">country</label>
+                  <select name="country" class="states form-control" id="countryId">
+                    <option selected="true" disabled="disabled">Country All()</option>
+                       {% for ct in country_choices %}
+                            <option value="{{ ct.id }}">{{ ct.name }}</option>
+                       {% endfor  %}
+                  </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label class="sr-only">State</label>
+                  <select name="state" class="states form-control" id="stateId">
+                    <option selected="true" disabled="disabled">State (All)</option>
+                      {% for st in state_choices %}
+                        <option value="{{ st.id }}"> {{ st.name }}</option>
+                      {% endfor %}
+                  </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label class="sr-only">City</label>
+                   <select name="city" class="cities form-control" id="cityId">
+                     <option selected="true" disabled="disabled">City (All)</option>
+                     {% for ci in city_choices %}
+                        <option value="{{ ci.id }}">{{ ci.name }}</option>
+                     {% endfor %}
+                     </select>
+                </div>
+              </div>
+              <!-- Form Row 2 -->
+              <div class="form-row">
+                <div class="col-md-4 mb-3">
+                  <label class="sr-only">Bedrooms</label>
+                  <select name="bedrooms" class="form-control">
+                    <option selected="true" disabled="disabled">Bedrooms (All)</option>
+                    {% for key,value in bedrooms_choices.items %}
+                        <option value="{{ key }}"
+                        {% if key == values.bedrooms %}
+                                selected
+                        {% endif %}
+
+                        >{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <select name="price" class="form-control" id="type">
+                    <option selected="true" disabled="disabled">Max Price (Any)</option>
+                     {% for key,value in price_choices.items %}
+                        <option value="{{ key }}"
+                        {% if key == values.price %}
+                                selected
+                        {% endif %}
+
+                        >{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                 <div class="col-md-4 mb-3">
+                  <label class="sr-only">Keywords</label>
+                  <input type="text" name="keywords" class="form-control"
+                         placeholder="Keyword (Pool, Garage, etc)" value="{{ values.keywords }}">
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-block mt-4" type="submit">Submit form</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="index.html">
+              <i class="fas fa-home"></i> Home</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="listings.html">Browse Listings</a>
+          </li>
+          <li class="breadcrumb-item active"> Search Results</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Listings -->
+  <section id="listings" class="py-4">
+    <div class="container">
+      <div class="row">
+
+        {% if posts %}
+            {% for post in posts %}
+              <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card listing-preview">
+                  <img class="card-img-top" src="{{post.photo_main.url}}" alt="">
+                  <div class="card-img-overlay">
+                    <h2>
+                      <span class="badge badge-secondary text-white">${{post.price | intcomma }}</span>
+                    </h2>
+                  </div>
+                  <div class="card-body">
+                    <div class="listing-heading text-center">
+                      <h4 class="text-primary">{{post.title}}</h4>
+                      <p>
+                        <i class="fas fa-map-marker text-secondary"></i> {{post.city}} {{post.state}}, {{post.zipcode}}</p>
+                    </div>
+                    <hr>
+                    <div class="row py-2 text-secondary">
+                      <div class="col-6">
+                        <i class="fas fa-th-large"></i> Sqft: {{post.sqft}}</div>
+                      <div class="col-6">
+                        <i class="fas fa-car"></i> Garage: {{ post.garage }}</div>
+                    </div>
+                    <div class="row py-2 text-secondary">
+                      <div class="col-6">
+                        <i class="fas fa-bed"></i> Bedrooms: {{post.bedrooms}}</div>
+                      <div class="col-6">
+                        <i class="fas fa-bath"></i> Bathrooms: {{post.bathrooms}}</div>
+                    </div>
+                    <hr>
+                    <div class="row py-2 text-secondary">
+                      <div class="col-12">
+                        <i class="fas fa-user"></i> {{ post.username }}</div>
+                    </div>
+                    <div class="row text-secondary pb-2">
+                      <div class="col-6">
+                        <i class="fas fa-clock"></i> {{post.list_date | timesince }}</div>
+                    </div>
+                    <hr>
+                    <a href="{% url 'post-detail' post.id %}" class="btn btn-primary btn-block">More Info</a>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+
+          {% else %}
+
+          <div class="col-md-12">
+            <p>no listing available</p>
+          </div>
+
+          {% endif %}
+
+      </div>
+    </div>
+  </section>
+
+
+
+{% endblock content %}
